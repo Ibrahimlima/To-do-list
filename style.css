@@ -19,6 +19,7 @@ main{
 h1 {
     font-size: 2.2rem;
     margin: 0 0 1.6rem;
+    text-align: center;
     }
 
 
@@ -27,11 +28,68 @@ h1 {
     max-width: 50rem;
     background-color: #fff;
     border-radius: 0.8rem;
-    padding: 2.4rem 3.2rem;
+    padding: 2.4rem 2.6rem;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
     margin-top: 3rem;
     }
 
+.todolist-section{
+    margin: .8rem 1.6rem;
+    min-height: 5rem;
+
+    & > ul{
+        padding-inline-start: 0rem;
+        height: 23rem;
+        overflow: auto;
+    }
+
+    & > ul > li {
+        list-style-type: none;
+        padding: .8rem 1.6rem;
+        font-size: 2.4rem;
+        background-color: #efefef80;
+        display: flex;
+        justify-content:space-between;
+        position: relative;
+        margin-bottom: .8rem;
+    }
+
+    & > ul > li:last-child{
+        margin-bottom: 0;
+    }
+
+    & > ul > li > button {
+        width: 2.4rem;
+        height: 2.4rem;
+        background-color: #5c498054;
+        color: #fff;
+        border: none;
+        border-radius: .4rem;
+        cursor: pointer;
+
+        &:hover{
+            background-color: #b7afc754;
+        }
+    }
+}
+
+.checkbox-label{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    & > label{
+        cursor: pointer;
+    }
+
+    & > input{
+        margin-right: .8rem;
+        cursor: pointer;
+        height: 1rem;
+        width: 1rem;
+        border-radius: .8rem;
+        border : none
+    }
+}
