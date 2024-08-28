@@ -1,8 +1,19 @@
 let tasks = [
     {id: 1 , description: 'comprar pão', check: false},
     {id: 2 , description: 'comprar suprimentos para o almoço', check: false},
-    {id: 3 , description: 'fazer o almoço', check: false},
+    {id: 3 , description: 'fazer o almoço', check: false},  
 ]
+
+const createTaskListItem = (task, checkBox) => {
+    const list = document.getElementById('todoList');
+    const toDo = document.createElement('li');
+
+    toDo.id = task.id;
+    toDo.appendChild(checkBox);
+    list.appendChild(toDo);
+
+    return toDo
+}
 
 const checkBoxInput = ({id, description, checked}) => {
     const checkBox = document.createElement('input');
@@ -12,7 +23,7 @@ const checkBoxInput = ({id, description, checked}) => {
 
     checkBox.type = 'checkbox';
     checkBox.id = checkBoxId;
-    checkBox.checked = checked;
+    checkBox.checked = checked || false;
 
     label.textContent = description;
     label.htmlFor = checkBoxId;
@@ -25,18 +36,38 @@ const checkBoxInput = ({id, description, checked}) => {
     return wrapper;
 }
 
+const newTaskId = () =>{     
+    const lastIdTasks = tasks[tasks.length -1]?.id;
+    return lastIdTasks ? lastIdTasks + 1 : 1;
+}
+
+const newTaskInfo = (event) =>{
+    const description = event.target.elements.description.value;
+    const id = newTaskId();
+
+    return {description, id};
+}
+
+const createTask = (event) => {
+    event.preventDefault();
+
+   const newTask = newTaskInfo(event) 
+   const check = checkBoxInput(newTask) 
+   createTaskListItem(newTask, check)
+
+   tasks = [
+        ...tasks,
+        {id: newTaskId.id, description: newTask.description, checked: false}
+   ]     
+}
+
 window.onload = function(){
+
+    const form = document.getElementById('todo-form');
+    form.addEventListener('submit', createTask);    
+
     tasks.forEach((task) =>{
-        const checkb = checkBoxInput(task) 
-        const list = document.getElementById('todoList');
-        const toDo = document.createElement('li');
-        //const button = document.createElement('button')
-
-        toDo.id = task.id;
-        toDo.appendChild(checkb);
-        //toDo.appendChild(button)
-        toDo.classList.add('task');
-
-        list.appendChild(toDo)
+        const checkb = checkBoxInput(task); 
+        createTaskListItem(task, checkb)  
     })
 }
