@@ -6,14 +6,15 @@
     font-family: sans-serif;
 }
 
-main{
-    height: 100vh;
-    width: 100vw;
-    margin: 0;
+body{
+    height: 100%;
+    width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
     background-image: linear-gradient(43deg, rgba(24,41,205,0.7721463585434174) 0%, rgba(255,0,33,0.8897934173669468) 100%);
+    background-repeat: no-repeat;
+    background-size: cover;
 }
 
 .main-section{
@@ -21,11 +22,11 @@ main{
     max-width: 50rem;
     background-color: #fff;
     border-radius: 0.8rem;
-    padding: 2.4rem 2.6rem;
+    padding: 1.4rem 1.6rem;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    margin-top: 3rem;
+    margin: 2.7rem;
 }
 
 h1{
