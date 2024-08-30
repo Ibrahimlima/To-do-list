@@ -1,3 +1,24 @@
+const taskProgressData = (tasks) => {
+    let tasksProgress;
+    const tasksProgressDom = document.getElementById('tasksProgress');
+
+    if (tasksProgressDom) tasksProgress = tasksProgressDom;
+
+    else {
+        const newTasksProgressDom = document.createElement('div')
+        newTasksProgressDom.id = 'tasksProgress';
+        document.getElementById('todoFooter').appendChild(newTasksProgressDom);
+        tasksProgress = newTasksProgressDom;
+    }
+
+    const doneTasks = tasks.filter(({checked}) => checked).length
+    const totalTasks = tasks.length;
+    tasksProgress.textContent = `${doneTasks}/${totalTasks} Concluídas!!`;
+
+}
+
+
+
 const tasksStorage = () =>{
     const localTasks = JSON.parse(window.localStorage.getItem('tasks'))
 
@@ -8,7 +29,8 @@ const tasksStorage = () =>{
 const removeTaskItem = (taskId) => {
     const tasks = tasksStorage();
     const updatedTasks = tasks.filter(({ id }) => parseInt(id) !== parseInt(taskId));
-    saveTasks(updatedTasks);
+    saveTasks(updatedTasks)
+    taskProgressData(updatedTasks)
 
     document.getElementById("todoList").removeChild(document.getElementById(taskId))
 
@@ -24,6 +46,7 @@ const removeDoneTasks = () => {
 
     const updatedTasks = tasks.filter(({checked}) => !checked)
     saveTasks(updatedTasks);
+    taskProgressData(updatedTasks)
 
     tasksToRemove.forEach((tasksToRemove) =>{
         document.getElementById("todoList").removeChild(document.getElementById(tasksToRemove))
@@ -67,7 +90,8 @@ const onCheckboxClick = (event) => {
             ? { ...task, checked: event.target.checked} : task  
     })
 
-    saveTasks(updatedTasks)
+    saveTasks(updatedTasks);
+    taskProgressData(updatedTasks)
 }
 
 const checkBoxInput = ({id, description, checked}) => {
@@ -125,7 +149,8 @@ const createTask = async (event) => {
         ...tasks,
         {id: newTask.id, description: newTask.description, checked: false}
    ]   
-   saveTasks(updatedTasks)  
+   saveTasks(updatedTasks);
+   taskProgressData(updatedTasks)
 
    document.getElementById('description').value = ''
    document.getElementById('task-btn').removeAttribute('disabled')
@@ -141,4 +166,6 @@ window.onload = function(){
         const checkb = checkBoxInput(task); 
         createTaskListItem(task, checkb)  
     })
+
+    taskProgressData(tasks)
 }
