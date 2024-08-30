@@ -1,30 +1,42 @@
-let tasks = [
-    {id: 1 , description: 'comprar pão', checked: false},
-    {id: 2 , description: 'comprar suprimentos para o almoço', checked: false},
-    {id: 3 , description: 'fazer o almoço', checked: false},  
-]
+const tasksStorage = () =>{
+    const localTasks = JSON.parse(window.localStorage.getItem('tasks'))
+
+    return localTasks ? localTasks : [];
+
+}
 
 const removeTaskItem = (taskId) => {
-    tasks = tasks.filter(({ id }) => parseInt(id) !== parseInt(taskId));
+    const tasks = tasksStorage();
+    const updatedTasks = tasks.filter(({ id }) => parseInt(id) !== parseInt(taskId));
+    saveTasks(updatedTasks);
 
     document.getElementById("todoList").removeChild(document.getElementById(taskId))
 
 }
 
 const removeDoneTasks = () => {
+    const tasks = tasksStorage();
     const tasksToRemove = tasks
             .filter(({checked}) => checked)
             .map(({id}) => id)
 
 
 
-    tasks = tasks.filter(({checked}) => !checked)
+    const updatedTasks = tasks.filter(({checked}) => !checked)
+    saveTasks(updatedTasks);
 
     tasksToRemove.forEach((tasksToRemove) =>{
         document.getElementById("todoList").removeChild(document.getElementById(tasksToRemove))
     })
 
 }
+
+
+
+const saveTasks = (tasks) => {
+    window.localStorage.setItem('tasks', JSON.stringify(tasks))
+
+}  
 
 const createTaskListItem = (task, checkBox) => {
     const list = document.getElementById('todoList');
@@ -46,12 +58,16 @@ const createTaskListItem = (task, checkBox) => {
 
 const onCheckboxClick = (event) => {
     const [id] = event.target.id.split('-');
+
+    const tasks = tasksStorage();
     
     
-    tasks = tasks.map((task) => {
+    const updatedTasks = tasks.map((task) => {
         return parseInt(task.id) === parseInt(id)
             ? { ...task, checked: event.target.checked} : task  
     })
+
+    saveTasks(updatedTasks)
 }
 
 const checkBoxInput = ({id, description, checked}) => {
@@ -76,7 +92,8 @@ const checkBoxInput = ({id, description, checked}) => {
     return wrapper;
 }
 
-const newTaskId = () =>{     
+const newTaskId = () =>{  
+    const tasks = tasksStorage();   
     const lastIdTasks = tasks[tasks.length -1]?.id;
     return lastIdTasks ? lastIdTasks + 1 : 1;
 }
@@ -88,17 +105,30 @@ const newTaskInfo = (event) =>{
     return {description, id};
 }
 
-const createTask = (event) => {
+const createTaskInfo = (event) => new Promise((resolve) => {
+    setTimeout(() => {
+        resolve(newTaskInfo(event))
+    }, 600)
+})
+
+const createTask = async (event) => {
     event.preventDefault();
 
-   const newTask = newTaskInfo(event) 
+    document.getElementById('task-btn').setAttribute('disabled', true)
+
+   const newTask = await createTaskInfo(event) 
    const check = checkBoxInput(newTask) 
    createTaskListItem(newTask, check)
 
-   tasks = [
+   const tasks = tasksStorage();
+   const updatedTasks = [
         ...tasks,
-        {id: newTaskId.id, description: newTask.description, checked: false}
-   ]     
+        {id: newTask.id, description: newTask.description, checked: false}
+   ]   
+   saveTasks(updatedTasks)  
+
+   document.getElementById('description').value = ''
+   document.getElementById('task-btn').removeAttribute('disabled')
 }
 
 window.onload = function(){
@@ -106,6 +136,7 @@ window.onload = function(){
     const form = document.getElementById('todo-form');
     form.addEventListener('submit', createTask);    
 
+    const tasks = tasksStorage()
     tasks.forEach((task) =>{
         const checkb = checkBoxInput(task); 
         createTaskListItem(task, checkb)  

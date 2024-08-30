@@ -78,6 +78,12 @@ h1{
                 color: #3ae010de;
             }
 
+            &:disabled{
+                background-color: #393939c0;
+                border: 2px solid #201f1f;
+                cursor: not-allowed;
+            }
+
             
         
     }
